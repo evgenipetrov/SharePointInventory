@@ -95,7 +95,7 @@ Function New-WordTable
 			{
 				$Properties | ForEach-Object {
 					$Table.cell(($i + 2), $c).range.Bold = 0
-					$Table.cell(($i + 2), $c).range.text = $Object[$i].$_
+					$Table.cell(($i + 2), $c).range.text = $Object[$i].$_.ToString()
 					$c++
 				}
 				$c = 1
