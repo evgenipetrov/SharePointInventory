@@ -138,6 +138,8 @@ function Get-SPIObject
 	
 	$member = Get-SPISharePointDesignerSettings
 	$object | Add-Member -NotePropertyName 'SharePointDesignerSettings' -NotePropertyValue $member
+
+    Remove-PSSnapin Microsoft.SharePoint.PowerShell -ErrorAction SilentlyContinue
 	
 	Write-Output $object
 }
@@ -149,7 +151,7 @@ function Get-SPIFarmOverview
 	param ()
 	
 	$installedSharePointVersion = $spFarm.BuildVersion.ToString()
-	$license = 'Enterprise' #TODO
+	$license = Get-SPIFarmLicense
 	$configurationDatabase = $spDatabase | Where-Object { $_.Type -eq 'Configuration Database' } | Select-Object -ExpandProperty Name
 	
 	$property = [ordered]@{
@@ -165,6 +167,25 @@ function Get-SPIFarmOverview
 	$output | Add-Member -MemberType NoteProperty -Name 'Title' -Value $title
 	$output | Add-Member -MemberType NoteProperty -Name 'Payload' -Value $payload -TypeName 'PSCustomObject'
 	Write-Output $output
+}
+
+
+function Get-SPIFarmLicense {
+    $license = Get-SPUserLicense
+    
+    $licenses = @()
+    foreach($l in $license){
+        $licenses += $l.License
+    }
+    if ($licenses -contains 'Enterprise'){
+        Write-Output 'Enterprise'
+    }
+    elseif($licenses -contains 'Standard'){
+        Write-Output 'Standard'
+    }
+    elseif($licenses -contains '???'){
+        Write-Output 'SharePoint Foundation'
+    }
 }
 
 

@@ -1,5 +1,8 @@
-﻿#Explicitly import the module for testing
-Import-Module 'SPIDocumentGenerator'
+﻿#This part must be run on the SharePoint farm
+Remove-Module SPInventory
+Import-Module 'C:\Projects\SPInventory\SPInventory\SPInventory.psm1'
+Export-SPIObject -Output 'C:\Projects\SPInventory\spinventory.xml'
 
-#Run each module function
-New-SPInventoryDocument -InputFilePath 'C:\Temp\spinventory.xml' -OutputFilePath 'C:\Temp\spinventory.docx'
+#This part must be run on a PC with MS Word installed
+#Import-Module 'SPIDocumentGenerator'
+#New-SPInventoryDocument -InputFilePath 'C:\Projects\SPInventory\spinventory.xml' -OutputFilePath 'C:\Projects\SPInventory\spinventory.docx'
